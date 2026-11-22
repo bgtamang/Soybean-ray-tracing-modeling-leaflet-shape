@@ -1,24 +1,25 @@
 # Leaflet-type crosswalk for the Energy Farm SpiderCam LiDAR plots
 #
 # Purpose
-#   Assigns a field position, leaflet type (Broad or Narrow), genotype and line to every plot in
-#   the SpiderCam LiDAR point-cloud archive of the Energy Farm. The point clouds are named by a
-#   plot number within a SpiderCam block, so the field grid is decoded from that number (a
-#   12-column module) and matched to the field plot metadata by row spacing, pass and range. Plots
-#   that were simulated with Helios (the 224 BC3 near-isogenic line plots, 112 per row spacing)
-#   are flagged. The crosswalk is used by all later LiDAR steps (Fig. 5C, Tables S8 and S9).
-#
-#   This script cannot be rerun from the package. It needs the raw point-cloud archive
-#   (3,064 PLY files, 4.1 GB) and the Energy Farm field plot metadata, which are available from
-#   the authors. Its output is included in the package.
+#   Assigns a field position, leaflet type (Broad or Narrow), genotype and line to every plot with
+#   a SpiderCam LiDAR point cloud in the package. The point clouds are named by a plot number
+#   within a SpiderCam block, so the field grid is decoded from that number (a 12-column module)
+#   and matched to the field plot metadata by row spacing, pass and range. The package holds the
+#   point clouds of the 224 plots simulated with Helios (the BC3 near-isogenic line plots, 112 per
+#   row spacing). The 31 check plots of the trial, which are the parents of the population, were
+#   not simulated and their point clouds are not included. Every plot is flagged as simulated
+#   with Helios, and the flag is checked against the simulation inputs and the field metadata.
+#   The crosswalk is used by all later LiDAR steps (Fig. 5C, Tables S8 and S9).
 #
 # Inputs
-#   data/lidar/Plot_PointClouds.zip                     raw per-plot point clouds (not included,
-#                                                        available from the authors)
-#   data/lidar/field_plot_metadata.csv                  field plot metadata of both sites with
-#                                                        Location, Spacing, Pass, Range, Leaf_type,
-#                                                        ID and Line (not included, available from
-#                                                        the authors)
+#   data/lidar/point_clouds/<block>/<flight date>/<file>.ply
+#                                                        per-plot point clouds, one PLY file per
+#                                                        plot and flight date. Only the folder and
+#                                                        file names are read here
+#   data/lidar/field_plot_metadata.csv                  field plot metadata of the Energy Farm
+#                                                        (all 255 plots, including the check plots)
+#                                                        with Location, Spacing, Pass, Range,
+#                                                        Leaf_type, ID and Line
 #   outputs/leaf_inputs/canopy_inputs_leaf_optics_EF.csv per-plot simulation inputs, Energy Farm
 #                                                        (leaf-inputs step), which define the plots
 #                                                        simulated with Helios
@@ -27,7 +28,8 @@
 #   outputs/field_validation/lidar/plot_leaftype_crosswalk.csv
 #                                                        one row per LiDAR plot with SpiderCam block
 #                                                        and plot number, spacing, pass, range,
-#                                                        leaflet type, genotype ID, line and Helios flag
+#                                                        leaflet type, genotype ID, line and Helios
+#                                                        flag (TRUE for every plot)
 #
 # Usage
 #   Rscript code/6_field_validation/lidar/01_plot_crosswalk.R   (run from the package root)
@@ -38,16 +40,15 @@
 options(stringsAsFactors = FALSE, warn = 1)
 
 ROOT      <- Sys.getenv("PACKAGE_ROOT", unset = ".")
-IN_ZIP    <- file.path(ROOT, "data", "lidar", "Plot_PointClouds.zip")
+IN_CLOUDS <- file.path(ROOT, "data", "lidar", "point_clouds")
 IN_META   <- file.path(ROOT, "data", "lidar", "field_plot_metadata.csv")
 IN_HELIOS <- file.path(ROOT, "outputs", "leaf_inputs", "canopy_inputs_leaf_optics_EF.csv")
 OUT_DIR   <- file.path(ROOT, "outputs", "field_validation", "lidar")
 OUT       <- file.path(OUT_DIR, "plot_leaftype_crosswalk.csv")
 
-if (!file.exists(IN_ZIP) || !file.exists(IN_META))
-  stop("The raw LiDAR archive and the field plot metadata are not included in the package. ",
-       "They are available from the authors (expected at data/lidar/Plot_PointClouds.zip and ",
-       "data/lidar/field_plot_metadata.csv).")
+if (!dir.exists(IN_CLOUDS))
+  stop("The point clouds were not found at data/lidar/point_clouds/. ",
+       "Unzip lidar_point_clouds_ef.zip into the package root.")
 dir.create(OUT_DIR, showWarnings = FALSE, recursive = TRUE)
 
 ## ---- 1. Field metadata: (Spacing, Pass, Range) -> leaflet type, genotype ID and line ----
@@ -64,11 +65,13 @@ line_lk <- setNames(ef$Line,      key)                   # BC3 (NIL) or a check 
 hz <- read.csv(IN_HELIOS)
 helios_set <- unique(paste(hz$Spacing, hz$Pass, hz$Range, sep = "|"))
 
-## ---- 2. Plot inventory: the plots present in the point-cloud archive ----
-zl <- unzip(IN_ZIP, list = TRUE)
-ply <- zl$Name[grepl("\\.ply$", zl$Name)]
+## ---- 2. Plot inventory: the plots with a point cloud in the package ----
+## Each file is <block>/<flight date>/<file>.ply below data/lidar/point_clouds/.
+ply <- list.files(IN_CLOUDS, pattern = "\\.ply$", recursive = TRUE)
 parts <- strsplit(ply, "/")
-block <- vapply(parts, `[`, "", 2)                     # SpiderCam block Soybean_1, _2 or _3
+if (length(ply) == 0 || any(lengths(parts) != 3))
+  stop("Expected point clouds as data/lidar/point_clouds/<block>/<flight date>/<file>.ply.")
+block <- vapply(parts, `[`, "", 1)                     # SpiderCam block Soybean_1, _2 or _3
 plot  <- as.integer(sub(".*Plot_?(\\d+)\\.ply$", "\\1", basename(ply)))
 inv <- unique(data.frame(block = block, plot = plot))
 inv$spacing <- ifelse(inv$block == "Soybean_3", "15", "30")   # 38-cm rows (15) or 76-cm rows (30)
@@ -110,13 +113,19 @@ for (a in names(anchors)) {
   if (!identical(got, unname(anchors[a]))) stop(sprintf("Reference plot %s: got %s", a, got))
 }
 cat("Reference plots agree (plots 2 and 76 Narrow, plots 22 and 32 Broad).\n")
-cat("Plot counts by row spacing (15 = 38 cm, 30 = 76 cm) x leaflet type (all 255 plots, including checks):\n")
+cat("Plot counts by row spacing (15 = 38 cm, 30 = 76 cm) x leaflet type (all plots with a point cloud):\n")
 print(table(inv$spacing, inv$leaf_type))
 h <- inv[inv$helios, ]
 cat(sprintf("\nPlots simulated with Helios (BC3 NILs): %d (expected 224)\n", nrow(h)))
 cat("Simulated plots by spacing x leaflet type (expected 56 Broad and 56 Narrow per spacing):\n")
 print(table(h$spacing, h$leaf_type))
-# The Helios flag must coincide with the BC3 line label of the field metadata.
+# Every simulated plot must have a point cloud in the package.
+no_cloud <- setdiff(helios_set, k)
+if (length(no_cloud) > 0)
+  stop(sprintf("%d plots simulated with Helios have no point cloud in data/lidar/point_clouds/.",
+               length(no_cloud)))
+# The Helios flag must coincide with the BC3 line label of the field metadata. The package holds
+# the point clouds of the simulated plots only, so both are TRUE for every plot.
 stopifnot(all((inv$line == "BC3") == inv$helios))
 cat(sprintf("Helios flag equals (Line == BC3) for all %d plots.\n", nrow(inv)))
 

@@ -1,6 +1,6 @@
 # Code for: Leaflet shape modulates canopy light-use efficiency by partitioning light more evenly among soybean leaves
 
-Bishal G. Tamang, Anthony Digrado, Carl J. Bernacchi, Elizabeth A. Ainsworth
+Bishal G. Tamang
 University of Illinois Urbana-Champaign
 
 This repository holds the analysis code of the article. The study compared broad- and
@@ -26,9 +26,9 @@ read the scripts and holds any later corrections.
 ## How to run
 
 1. Download the dataset from the Illinois Data Bank and unzip the main archive into an empty folder.
-   The four per-leaf archives (25 GB unzipped) are needed only for the figure scripts of Figs 2D,
-   3C-D and S7C-D and for the LITES-Helios comparison; unzip them into the same folder if those are
-   wanted.
+   The four per-leaf archives (25 GB unzipped) are needed only for Figs 2D, 3C-D and S7C-D (sections
+   `fig2d` and `fig3cd` of the figure script; `fig2d` needs about 20 GB of memory) and for the
+   LITES-Helios comparison; unzip them into the same folder if those are wanted.
 2. The dataset already contains this code in its `code/` folder. To use the version in this
    repository, copy the folders inside `code/` from here over the ones in the dataset.
 3. Run each script from the main folder of the dataset, for example
@@ -52,9 +52,17 @@ run the scripts in numeric order.
 4. `code/4_one_dimensional_model/` - the one-dimensional sun-shade model and its sensitivity check.
 5. `code/5_genetics/` - line BLUPs, heritability, kinship and association scans.
 6. `code/6_field_validation/` - LiDAR (`lidar/`) and LITES and SunScan (`lites_sunscan/`) analyses.
+7. `code/7_figures/all_figures.R` - all figures of the article, main and supplementary, in one
+   script. It draws the panels and writes the statistics and tables behind the numbers in the
+   article to `outputs/figures/`. Each figure or group of panels is one section of the script:
 
-The scripts that draw the figures (`code/7_figures/` in the dataset) are not included in this
-repository.
+       Rscript code/7_figures/all_figures.R                  all sections
+       Rscript code/7_figures/all_figures.R fig4a figS4      only the named sections
+       Rscript code/7_figures/all_figures.R --list           print the section names
+
+   The dataset holds the same code as one script per figure or group of panels. The field maps in
+   Fig 1A-B, the photograph in Fig 1D and the Helios canopy images in Figs 2B and 3E are not
+   produced by code.
 
 `docs/helios_build.md` explains how to build the two Helios programs, and `docs/cluster_run.md` how
 they were run on the cluster.
@@ -67,8 +75,9 @@ Notes:
   slightly different values. A new fit is saved as `aci_fits_per_plant_refit.csv`. The fits used in
   the article are in the dataset (`outputs/leaf_inputs/aci_fits_per_plant.csv`) and are read by the
   later steps.
-- The first two LiDAR scripts need the raw point-cloud archive and the field plot metadata, which
-  are available from the authors. Their outputs are in the dataset.
+- The first two LiDAR scripts read the point clouds of the 224 Energy Farm plots simulated with
+  Helios, which are a separate archive of the dataset (`lidar_point_clouds_ef.zip`, unzipped into
+  the same folder).
 - The Excel recalculation of the LI-6800 files (`aci_respiration/00`) needs Excel and the original
   instrument files. The recalculated workbooks are in the dataset.
 

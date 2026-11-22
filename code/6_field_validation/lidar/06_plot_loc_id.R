@@ -15,8 +15,8 @@
 #
 # Outputs
 #   outputs/field_validation/lidar/plot_loc_id_crosswalk.csv
-#       the LiDAR plot crosswalk with the Loc_ID of each plot simulated with Helios (NA for the
-#       check plots)
+#       the LiDAR plot crosswalk with the Loc_ID of each plot. Every plot in the crosswalk was
+#       simulated with Helios, so every plot has a Loc_ID
 #
 # Usage
 #   Rscript code/6_field_validation/lidar/06_plot_loc_id.R   (run from the package root)

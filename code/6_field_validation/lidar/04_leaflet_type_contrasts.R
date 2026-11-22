@@ -49,7 +49,8 @@ M$spacing <- as.character(M$spacing)
 M$helios  <- M$helios %in% c(TRUE, "TRUE", "True")
 
 ## The analysis uses the plots simulated with Helios, which are the 224 BC3 NILs. The 31 check
-## plots (the parents of the population) are not near-isogenic and are excluded.
+## plots (the parents of the population) are not near-isogenic. Their point clouds are not in the
+## package, so the metrics hold the simulated plots only and this filter keeps every row.
 M <- M[M$helios, ]
 study_plots <- unique(paste(M$block, M$plot))
 cat(sprintf("BC3 NIL plots: %d plot x date rows, %d unique plots.\n",
