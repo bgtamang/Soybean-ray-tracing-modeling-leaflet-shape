@@ -1,0 +1,16 @@
+# The dataset folders, in case the dataset is unzipped into a clone of this repository
+/data/
+/outputs/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+Rplots.pdf
+
+# Python
+__pycache__/
+*.pyc
+
+# Helios build folders
+build/

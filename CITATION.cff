@@ -1,0 +1,62 @@
+cff-version: 1.2.0
+title: "Code for: Leaflet shape modulates canopy light-use efficiency by partitioning light more evenly among soybean leaves"
+message: "If you use this code, please cite the accompanying article and the archived dataset."
+type: software
+authors:
+  - family-names: Tamang
+    given-names: Bishal G.
+    affiliation: University of Illinois Urbana-Champaign
+    orcid: "https://orcid.org/0000-0003-4991-6354"
+  - family-names: Digrado
+    given-names: Anthony
+    affiliation: University of Illinois Urbana-Champaign
+    orcid: "https://orcid.org/0000-0002-8624-9290"
+  - family-names: Bernacchi
+    given-names: Carl J.
+    affiliation: University of Illinois Urbana-Champaign
+    orcid: "https://orcid.org/0000-0002-2397-425X"
+  - family-names: Ainsworth
+    given-names: Elizabeth A.
+    affiliation: University of Illinois Urbana-Champaign
+    orcid: "https://orcid.org/0000-0002-3199-8999"
+keywords:
+  - "canopy photosynthesis"
+  - "leaflet shape"
+  - "near-isogenic lines"
+  - "Glycine max"
+  - "three-dimensional canopy modeling"
+  - "Helios"
+  - "light-use efficiency"
+  - "GmJAG1"
+  - "LiDAR"
+  - "GWAS"
+license: GPL-3.0-only
+repository-code: "https://github.com/bgtamang/Soybean-ray-tracing-modeling-leaflet-shape"
+version: "1.0.0"
+references:
+  - type: article
+    status: preprint
+    title: "Leaflet shape modulates canopy light-use efficiency by partitioning light more evenly among soybean leaves"
+    authors:
+      - family-names: Tamang
+        given-names: Bishal G.
+      - family-names: Digrado
+        given-names: Anthony
+      - family-names: Bernacchi
+        given-names: Carl J.
+      - family-names: Ainsworth
+        given-names: Elizabeth A.
+  - type: dataset
+    title: "Data for: Leaflet shape modulates canopy light-use efficiency by partitioning light more evenly among soybean leaves"
+    authors:
+      - family-names: Tamang
+        given-names: Bishal G.
+      - family-names: Digrado
+        given-names: Anthony
+      - family-names: Bernacchi
+        given-names: Carl J.
+      - family-names: Ainsworth
+        given-names: Elizabeth A.
+    publisher:
+      name: University of Illinois Urbana-Champaign
+    doi: "10.13012/B2IDB-9478251_V1"
