@@ -1,7 +1,11 @@
 # Code for: Leaflet shape modulates canopy light-use efficiency by partitioning light more evenly among soybean leaves
 
 Bishal G. Tamang
-University of Illinois Urbana-Champaign
+
+![Helios canopy net photosynthesis of a broad-leaflet and a narrow-leaflet soybean canopy](assets/canopy_A_broad_vs_narrow.png)
+
+Canopy net photosynthesis (canopy A) simulated with Helios for a broad-leaflet (left) and a
+narrow-leaflet (right) soybean canopy.
 
 This repository holds the analysis code of the article. The study compared broad- and
 narrow-leaflet soybean near-isogenic lines grown in 2024 at two University of Illinois field sites,
