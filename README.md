@@ -15,6 +15,8 @@ simulated with the three-dimensional model Helios on each date leaf area index (
 against in-canopy light profiles (LITES and SunScan) at SoyFACE and airborne LiDAR at the Energy
 Farm. Helios canopy traits were then used in a genome-wide association analysis of 188 lines.
 
+Preprint: https://doi.org/10.64898/2026.11.20.768164
+
 
 ## Data and archived version
 
@@ -105,7 +107,8 @@ Figs 2A and 6B. Package versions used in the rerun:
 If you use this code, please cite the article and the dataset:
 
 Tamang BG, Digrado A, Bernacchi CJ, Ainsworth EA. Leaflet shape modulates canopy light-use
-efficiency by partitioning light more evenly among soybean leaves.
+efficiency by partitioning light more evenly among soybean leaves. bioRxiv.
+https://doi.org/10.64898/2026.11.20.768164
 
 Tamang BG, Digrado A, Bernacchi CJ, Ainsworth EA. Data for: Leaflet shape modulates canopy light-use
 efficiency by partitioning light more evenly among soybean leaves. University of Illinois

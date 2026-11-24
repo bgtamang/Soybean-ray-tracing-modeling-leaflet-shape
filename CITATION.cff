@@ -34,6 +34,9 @@ references:
         given-names: Carl J.
       - family-names: Ainsworth
         given-names: Elizabeth A.
+    journal: bioRxiv
+    year: 2026
+    doi: "10.64898/2026.11.20.768164"
   - type: dataset
     title: "Data for: Leaflet shape modulates canopy light-use efficiency by partitioning light more evenly among soybean leaves"
     authors:
